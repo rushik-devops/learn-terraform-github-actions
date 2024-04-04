@@ -65,7 +65,7 @@ resource "aws_instance" "jenkins" {
 }
 
 resource "aws_vpc" "jenkins" {
-  cidr_blocks = "10.0.0.0/16"
+  cidr_blocks = ["10.0.0.0/16"]
 }
 
 
