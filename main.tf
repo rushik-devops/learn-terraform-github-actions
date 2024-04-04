@@ -64,8 +64,15 @@ resource "aws_instance" "jenkins" {
               EOF
 }
 
+
 resource "aws_vpc" "jenkins" {
   cidr_block = "10.0.0.0/16"
+}
+
+
+resource "aws_subnet" "jenkins-subnet" {
+   vpc_id     = aws_vpc.jenkins.id
+   cidr_block = "10.0.0.0/16"
 }
 
 
