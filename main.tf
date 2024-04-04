@@ -50,7 +50,7 @@ resource "aws_instance" "jenkins" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.jenkinshost.key_name
-  vpc_security_group_ids = "${aws_security_group.jenkins-sg.id}"
+  vpc_security_group_ids = [aws_security_group.jenkins-sg.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -71,14 +71,14 @@ resource "aws_vpc" "jenkins" {
 
 
 resource "aws_subnet" "jenkins-subnet" {
-   vpc_id     = "${aws_vpc.jenkins.id}"
+   vpc_id     = [aws_vpc.jenkins.id]
    cidr_block = "10.0.0.0/16"
 }
 
 
 resource "aws_security_group" "jenkins-sg" {
   name    = "jenkins-sg"
-  vpc_id  = "${aws_vpc.jenkins.id}"
+  vpc_id  = [aws_vpc.jenkins.id]
   ingress {
     from_port   = 8080
     to_port     = 8080
