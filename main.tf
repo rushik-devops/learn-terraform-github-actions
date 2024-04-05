@@ -77,8 +77,9 @@ resource "aws_subnet" "jenkins-subnet" {
 
 
 resource "aws_security_group" "jenkins-sg" {
-  name    = "jenkins-sg"
-  vpc_id  = aws_vpc.jenkins.id
+  name       = "jenkins-sg"
+  vpc_id     = aws_vpc.jenkins.id
+  depends_on = [aws_vpc.jenkins]
   ingress {
     from_port   = 8080
     to_port     = 8080
