@@ -46,25 +46,6 @@ resource "aws_key_pair" "jenkinshost" {
 }
 
 
-resource "aws_instance" "jenkins" {
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
-  key_name               = aws_key_pair.jenkinshost.key_name
-  vpc_security_group_ids = [aws_security_group.jenkins-sg.id]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update –y
-			        sudo wget -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-			        sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-			        sudo dnf install java-11-amazon-corretto -y
-			        sudo yum install jenkins -y
-			        sudo systemctl enable jenkins
-			        sudo systemctl start jenkins
-              EOF
-}
-
-
 resource "aws_vpc" "jenkins" {
   cidr_block = "10.0.0.0/16"
 }
@@ -101,6 +82,26 @@ resource "aws_security_group" "jenkins-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+
+resource "aws_instance" "jenkins" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t2.micro"
+  key_name               = aws_key_pair.jenkinshost.key_name
+  vpc_security_group_ids = [aws_security_group.jenkins-sg.id]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo yum update –y
+			        sudo wget -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+			        sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+			        sudo dnf install java-11-amazon-corretto -y
+			        sudo yum install jenkins -y
+			        sudo systemctl enable jenkins
+			        sudo systemctl start jenkins
+              EOF
+}
+
 
 output "jenkins-address" {
   value = "${aws_instance.jenkins.public_dns}:8080"
