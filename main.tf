@@ -71,14 +71,14 @@ resource "aws_vpc" "jenkins" {
 
 
 resource "aws_subnet" "jenkins-subnet" {
-   vpc_id     = [aws_vpc.jenkins.id]
+   vpc_id     = aws_vpc.jenkins.id
    cidr_block = "10.0.0.0/16"
 }
 
 
 resource "aws_security_group" "jenkins-sg" {
   name    = "jenkins-sg"
-  vpc_id  = [aws_vpc.jenkins.id]
+  vpc_id  = aws_vpc.jenkins.id
   ingress {
     from_port   = 8080
     to_port     = 8080
